@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Abbasov-cpp-labs.vcxproj" />
+  <Project Path="Abbasov-cpp-labs.vcxproj" Id="52def692-d349-4a93-85b3-581b2fc75e2b" />
 </Solution>
