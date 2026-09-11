@@ -19,6 +19,62 @@ struct CS {
 	bool created = false; // true - КС создана, false - КС не создана
 };
 
+Pipe inputPipe() {
+	Pipe p;
+	cout << "Введите название трубы: ";
+	getline(cin, p.name);
+	cout << "Введите длину трубы (в километрах): ";
+	cin >> p.length;
+	cout << "Введите диаметр трубы (в миллиметрах): ";
+	cin >> p.diameter;
+	cout << "Введите состояние трубы (1 - на ремонте, 0 - в рабочем состоянии): ";
+	cin >> p.underRepair;
+	p.created = true;
+	return p;
+};
+
+CS inputCS() {
+	CS cs;
+	cout << "Введите название станции: ";
+	getline(cin, cs.name);
+	cout << "Введите количество цехов: ";
+	cin >> cs.totalShops;
+	cout << "Введите количество рабочих цехов: ";
+	cin >> cs.totalWorkingShops;
+	cout << "Введите класс станции (a,b,c): ";
+	cin >> cs.classStation;
+	cs.created = true;
+	return cs;
+};
+
+void outputPipe(Pipe p) {
+	if (p.created) {
+		cout << "Вывод данных для трубы:" << endl;
+		cout << "Название трубы: " << p.name << endl;
+		cout << "Длина трубы: " << p.length << " км" << endl;
+		cout << "Диаметр трубы: " << p.diameter << " мм" << endl;
+		cout << "Состояние трубы: " << (p.underRepair ? "На ремонте" : "В рабочем состоянии") << endl;
+	}
+	else {
+		cout << "Труба еще не создана" << endl;
+	}
+	cout << endl;
+};
+
+void outputCS(CS cs) {
+	if (cs.created) {
+		cout << "Вывод данных для станции:" << endl;
+		cout << "Название станции: " << cs.name << endl;
+		cout << "Количество цехов: " << cs.totalShops << endl;
+		cout << "Количество рабочих цехов: " << cs.totalWorkingShops << endl;
+		cout << "Класс станции: " << cs.classStation << endl;
+	}
+	else {
+		cout << "КС еще не создана" << endl;
+	}
+	cout << endl;
+};
+
 
 
 int main() {
