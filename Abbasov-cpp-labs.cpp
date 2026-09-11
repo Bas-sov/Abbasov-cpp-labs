@@ -76,6 +76,35 @@ void outputCS(CS cs) {
 };
 
 
+void command(int action, Pipe& p, CS& cs) {
+	if (action == 1) {
+		cout << "Введите данные для трубы:" << endl;
+		p = inputPipe();
+	}
+	else if (action == 2) {
+		cout << "Введите данные для станции:" << endl;
+		cs = inputCS();
+	}
+	else if (action == 3) {
+		outputPipe(p);
+		outputCS(cs);
+	}
+	else if (action == 4) {
+
+	}
+	else if (action == 5) {
+
+	}
+	else if (action == 6) {
+
+	}
+	else if (action == 7) {
+
+	}
+	else {
+		cout << "Ошибка: введите номер команды из списка (0-7)" << endl;
+	}
+};
 
 int main() {
 	string menu = "Меню\n1.Добавить трубу\n2.Добавить КС\n3.Просмотр всех объектов\n4.Редактировать трубу\n5.Редактировать КС\n6.Сохранить\n7.Загрузить\n0.Выход\n";
@@ -89,6 +118,7 @@ int main() {
 		if (action == 0) {
 			return 0;
 		}
+		command(action, p, cs);
 	}
 	return 0;
 }
