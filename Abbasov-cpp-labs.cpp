@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <fstream>
 #include <string>
 
 using namespace std;
@@ -143,6 +144,31 @@ void outputCS(CS cs) {
 	cout << "Класс станции: " << cs.classStation << endl;
 }
 
+void savedPipe(ofstream& outFile, Pipe p) {
+	outFile << p.name << endl;
+	outFile << p.length << endl;
+	outFile << p.diameter << endl;
+	outFile << p.underRepair << endl;
+}
+
+void savedCS(ofstream& outFile, CS cs) {
+	outFile << cs.name << endl;
+	outFile << cs.totalShops << endl;
+	outFile << cs.totalWorkingShops << endl;
+	outFile << cs.classStation << endl;
+}
+
+void read(ifstream& inFile, Pipe& p, CS& cs) {
+	inFile >> p.name;
+	inFile >> p.length;
+	inFile >> p.diameter;
+	inFile >> p.underRepair;
+	inFile >> cs.name;
+	inFile >> cs.totalShops;
+	inFile >> cs.totalWorkingShops;
+	inFile >> cs.classStation;
+}
+
 
 void command(int action, Pipe& p, CS& cs) {
 	if (action == 1) {
@@ -192,6 +218,9 @@ void command(int action, Pipe& p, CS& cs) {
 	}
 	else if (action == 7) {
 
+	}
+	else {
+		cerr << "Ошибка: введите номер команды из списка (0-7)" << endl;
 	}
 }
 
