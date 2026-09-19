@@ -214,10 +214,49 @@ void command(int action, Pipe& p, CS& cs) {
 		}
 	}
 	else if (action == 6) {
-
+		ofstream outFile;
+		outFile.open("result.txt");
+		if (!outFile.is_open()) {
+			cerr << "Ошибка: не удалось открыть файл" << endl;
+		}
+		else {
+			if (!isvalidPipe(p) && !isvalidCS(cs)) {
+				cout << "Труба еще не создана" << endl;
+				cout << endl;
+				cout << "КС еще не создана" << endl;
+			}
+			else if (isvalidPipe(p) && isvalidCS(cs)) {
+				savedPipe(outFile, p);
+				cout << "Труба добавлена в файл!" << endl;
+				cout << endl;
+				savedCS(outFile, cs);
+				cout << "КС добавлена в файл!" << endl;
+			}
+			else if (isvalidPipe(p)) {
+				savedPipe(outFile, p);
+				cout << "Труба добавлена в файл!" << endl;
+			}
+			else {
+				savedCS(outFile, cs);
+				cout << "КС добавлена в файл!" << endl;
+			}
+		}
+		outFile.close();
 	}
 	else if (action == 7) {
-
+		ifstream inFile;
+		inFile.open("result.txt");
+		if (!inFile.is_open()) {
+			cerr << "Ошибка: не удалось открыть файл" << endl;
+		}
+		else if (inFile.peek() == EOF) {
+			cout << "Предупреждение: файл пуст" << endl;
+		}
+		else {
+			read(inFile, p, cs);
+			cout << "Данные успешно считаны!" << endl;
+		}
+		inFile.close();
 	}
 	else {
 		cerr << "Ошибка: введите номер команды из списка (0-7)" << endl;
