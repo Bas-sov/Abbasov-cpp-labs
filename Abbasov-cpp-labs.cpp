@@ -5,18 +5,16 @@ using namespace std;
 
 struct Pipe {
 	string name;
-	double length; // в километрах
-	unsigned int diameter; // в миллиметрах
-	bool underRepair; // true - труба на ремонте, false - труба в рабочем состоянии
-	bool created = false; // true - труба создана, false - труба не создана
+	double length = {}; // в километрах
+	int diameter = {}; // в миллиметрах
+	bool underRepair = {}; // true - труба на ремонте, false - труба в рабочем состоянии
 };
 
 struct CS {
 	string name;
-	int totalShops; // количество цехов
-	int totalWorkingShops; // количество рабочих цехов
-	char classStation; // класс станции (a,b,c)
-	bool created = false; // true - КС создана, false - КС не создана
+	int totalShops = {}; // количество цехов
+	int totalWorkingShops = {}; // количество рабочих цехов
+	char classStation = {}; // класс станции (a,b,c)
 };
 
 Pipe inputPipe() {
@@ -25,13 +23,31 @@ Pipe inputPipe() {
 	getline(cin, p.name);
 	cout << "Введите длину трубы (в километрах): ";
 	cin >> p.length;
+	if (cin.fail() || cin.peek() != '\n' || p.length <= 0) {
+		cerr << "Ошибка: длина должна быть положительным числом" << endl;
+		cin.clear();
+		cin.ignore(100, '\n');
+		return {};
+	}
 	cout << "Введите диаметр трубы (в миллиметрах): ";
 	cin >> p.diameter;
+	if (cin.fail() || cin.peek() != '\n' || p.diameter <= 0) {
+		cerr << "Ошибка: диаметр должен быть целым положительным числом" << endl;
+		cin.clear();
+		cin.ignore(100, '\n');
+		return {};
+	}
 	cout << "Введите состояние трубы (1 - на ремонте, 0 - в рабочем состоянии): ";
 	cin >> p.underRepair;
-	p.created = true;
+	if (cin.fail() || cin.peek() != '\n' || (p.underRepair != 0 && p.underRepair != 1)) {
+		cerr << "Ошибка: состояние трубы — только 0 или 1" << endl;
+		cin.clear();
+		cin.ignore(100, '\n');
+		return {};
+	}
 	return p;
-};
+}
+
 
 CS inputCS() {
 	CS cs;
@@ -39,41 +55,60 @@ CS inputCS() {
 	getline(cin, cs.name);
 	cout << "Введите количество цехов: ";
 	cin >> cs.totalShops;
+	if (cin.fail() || cin.peek() != '\n' || cs.totalShops <= 0) {
+		cerr << "Ошибка: кол-во цехов должно быть целым положительным числом" << endl;
+		cin.clear();
+		cin.ignore(100, '\n');
+		return {};
+	}
 	cout << "Введите количество рабочих цехов: ";
 	cin >> cs.totalWorkingShops;
+	if (cin.fail() || cin.peek() != '\n' || cs.totalWorkingShops <= 0 || cs.totalWorkingShops > cs.totalShops) {
+		cerr << "Ошибка: кол-во рабочих цехов должно быть положительным числом и не может быть больше общего числа цехов" << endl;
+		cin.clear();
+		cin.ignore(100, '\n');
+		return {};
+	}
 	cout << "Введите класс станции (a,b,c): ";
 	cin >> cs.classStation;
-	cs.created = true;
+	if (cin.fail() || cin.peek() != '\n' || (cs.classStation != 'a' && cs.classStation != 'b' && cs.classStation != 'c')) {
+		cerr << "Ошибка: класс станции — только 'a', 'b' или 'c'" << endl;
+		cin.clear();
+		cin.ignore(100, '\n');
+		return {};
+	}
 	return cs;
-};
+}
+
+bool isvalidPipe(Pipe p) {
+	if (p.diameter == 0) {
+		return false;
+	}
+	return true;
+}
+
+bool isvalidCS(CS cs) {
+	if (cs.totalShops == 0) {
+		return false;
+	}
+	return true;
+}
 
 void outputPipe(Pipe p) {
-	if (p.created) {
-		cout << "Вывод данных для трубы:" << endl;
-		cout << "Название трубы: " << p.name << endl;
-		cout << "Длина трубы: " << p.length << " км" << endl;
-		cout << "Диаметр трубы: " << p.diameter << " мм" << endl;
-		cout << "Состояние трубы: " << (p.underRepair ? "На ремонте" : "В рабочем состоянии") << endl;
-	}
-	else {
-		cout << "Труба еще не создана" << endl;
-	}
-	cout << endl;
-};
+	cout << "Вывод данных для трубы:" << endl;
+	cout << "Название трубы: " << p.name << endl;
+	cout << "Длина трубы: " << p.length << " км" << endl;
+	cout << "Диаметр трубы: " << p.diameter << " мм" << endl;
+	cout << "Состояние трубы: " << (p.underRepair ? "На ремонте" : "В рабочем состоянии") << endl;
+}
 
 void outputCS(CS cs) {
-	if (cs.created) {
-		cout << "Вывод данных для станции:" << endl;
-		cout << "Название станции: " << cs.name << endl;
-		cout << "Количество цехов: " << cs.totalShops << endl;
-		cout << "Количество рабочих цехов: " << cs.totalWorkingShops << endl;
-		cout << "Класс станции: " << cs.classStation << endl;
-	}
-	else {
-		cout << "КС еще не создана" << endl;
-	}
-	cout << endl;
-};
+	cout << "Вывод данных для станции:" << endl;
+	cout << "Название станции: " << cs.name << endl;
+	cout << "Количество цехов: " << cs.totalShops << endl;
+	cout << "Количество рабочих цехов: " << cs.totalWorkingShops << endl;
+	cout << "Класс станции: " << cs.classStation << endl;
+}
 
 
 void command(int action, Pipe& p, CS& cs) {
@@ -86,8 +121,22 @@ void command(int action, Pipe& p, CS& cs) {
 		cs = inputCS();
 	}
 	else if (action == 3) {
-		outputPipe(p);
-		outputCS(cs);
+		if (!isvalidPipe(p) && !isvalidCS(cs)) {
+			cout << "Труба еще не создана" << endl;
+			cout << endl;
+			cout << "КС еще не создана" << endl;
+		}
+		else if (isvalidPipe(p) && isvalidCS(cs)) {
+			outputPipe(p);
+			cout << endl;
+			outputCS(cs);
+		}
+		else if (isvalidPipe(p)) {
+			outputPipe(p);
+		}
+		else {
+			outputCS(cs);
+		}
 	}
 	else if (action == 4) {
 
@@ -101,24 +150,29 @@ void command(int action, Pipe& p, CS& cs) {
 	else if (action == 7) {
 
 	}
-	else {
-		cout << "Ошибка: введите номер команды из списка (0-7)" << endl;
-	}
-};
+}
 
 int main() {
 	string menu = "Меню\n1.Добавить трубу\n2.Добавить КС\n3.Просмотр всех объектов\n4.Редактировать трубу\n5.Редактировать КС\n6.Сохранить\n7.Загрузить\n0.Выход\n";
-	Pipe p;
-	CS cs;
+	Pipe p = {};
+	CS cs = {};
 	while (true) {
 		int action;
 		cout << menu;
 		cin >> action;
-		cin.ignore(100, '\n');
-		if (action == 0) {
+		if (cin.fail() || cin.peek() != '\n' || action < 0) {
+			cerr << "Ошибка: введите целое положительное число!" << endl;
+			cin.clear();
+			cin.ignore(100, '\n');
+			continue;
+		}
+		else if (action == 0) {
 			return 0;
 		}
-		command(action, p, cs);
+		else {
+			cin.ignore(100, '\n');
+			command(action, p, cs);
+		}
 	}
 	return 0;
 }
