@@ -94,6 +94,39 @@ bool isvalidCS(CS cs) {
 	return true;
 }
 
+void editPipe(Pipe& p) {
+	char t = {};
+	cout << "Редактирование признака в ремонте:" << endl;
+	cout << "Текущее состояние: " << p.underRepair << endl;
+	cout << "Изменить?(1/0): ";
+	cin >> t;
+	if (cin.fail() || cin.peek() != '\n' || (t != '0' && t != '1')) {
+		cerr << "Ошибка: введите 1 (изменить) или 0 (не изменить)" << endl;
+		cin.clear();
+		cin.ignore(100, '\n');
+	}
+	else {
+		p.underRepair = t == '1' ? !(p.underRepair) : p.underRepair;
+	}
+}
+
+void editCS(CS& cs) {
+	int k = 0;
+	cout << "Редактирование кол-ва рабочих цехов:" << endl;
+	cout << "Общее кол-во цехов: " << cs.totalShops << endl;
+	cout << "Текущее состояние: " << cs.totalWorkingShops << endl;
+	cout << "Введите новое кол-во рабочих цехов: ";
+	cin >> k;
+	if (cin.fail() || cin.peek() != '\n' || k <= 0 || k > cs.totalShops) {
+		cerr << "Ошибка: кол-во рабочих цехов должно быть положительным числом и не может быть больше общего числа цехов" << endl;
+		cin.clear();
+		cin.ignore(100, '\n');
+	}
+	else {
+		cs.totalWorkingShops = k;
+	}
+}
+
 void outputPipe(Pipe p) {
 	cout << "Вывод данных для трубы:" << endl;
 	cout << "Название трубы: " << p.name << endl;
