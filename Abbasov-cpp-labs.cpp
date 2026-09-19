@@ -270,6 +270,12 @@ int main() {
 	while (true) {
 		int action;
 		cout << menu;
+		if (cin.peek() == ' ' || cin.peek() == '\t' || cin.peek() == '\n') {
+			cerr << "Ошибка: нельзя начинать с пробела/таба/переноса строки" << endl;
+			cin.clear();
+			cin.ignore(100, '\n');
+			continue;
+		}
 		cin >> action;
 		if (cin.fail() || cin.peek() != '\n' || action < 0) {
 			cerr << "Ошибка: введите целое положительное число!" << endl;
