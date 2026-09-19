@@ -172,10 +172,20 @@ void command(int action, Pipe& p, CS& cs) {
 		}
 	}
 	else if (action == 4) {
-
+		if (isvalidPipe(p)) {
+			editPipe(p);
+		}
+		else {
+			cout << "Труба еще не создана" << endl;
+		}
 	}
 	else if (action == 5) {
-
+		if (isvalidCS(cs)) {
+			editCS(cs);
+		}
+		else {
+			cout << "КС еще не создана" << endl;
+		}
 	}
 	else if (action == 6) {
 
