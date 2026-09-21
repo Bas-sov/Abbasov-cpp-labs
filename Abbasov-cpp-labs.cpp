@@ -18,77 +18,113 @@ struct CS {
 	char classStation = {}; // класс станции (a,b,c)
 };
 
-Pipe inputPipe() {
-	Pipe p;
-	cout << "Введите название трубы: ";
-	getline(cin, p.name);
-	cout << "Введите длину трубы (в километрах): ";
-	cin >> p.length;
-	if (cin.fail() || cin.peek() != '\n' || p.length <= 0) {
-		cerr << "Ошибка: длина должна быть положительным числом" << endl;
-		cin.clear();
+template <typename T>
+void readValid(T& value, const string& prompt) {
+	while (true) {
+		cout << prompt;
+		if (cin.peek() == ' ' || cin.peek() == '\t' || cin.peek() == '\n') {
+			cerr << "Ошибка: нельзя начинать с пробела/таба/переноса строки" << endl;
+			cin.clear();
+			cin.ignore(100, '\n');
+			continue;
+		}
+		cin >> value;
+		if (cin.fail() || cin.peek() != '\n') {
+			cerr << "Ошибка: некорректный ввод" << endl;
+			cin.clear();
+			cin.ignore(100, '\n');
+			continue;
+		}
 		cin.ignore(100, '\n');
-		return {};
+		return;
 	}
-	cout << "Введите диаметр трубы (в миллиметрах): ";
-	cin >> p.diameter;
-	if (cin.fail() || cin.peek() != '\n' || p.diameter <= 0) {
-		cerr << "Ошибка: диаметр должен быть целым положительным числом" << endl;
-		cin.clear();
-		cin.ignore(100, '\n');
-		return {};
+}
+
+Pipe inputPipe(Pipe& p) {
+	while (true) {
+		cout << "Введите название трубы: ";
+		getline(cin, p.name);
+		if (p.name.empty() || p.name[0] == ' ' || p.name[0] == '\t' ||
+			p.name[p.name.size() - 1] == ' ' || p.name[p.name.size() - 1] == '\t') {
+			cerr << "Ошибка: некорректный ввод" << endl;
+			continue;
+		}
+		break;
 	}
-	cout << "Введите состояние трубы (1 - на ремонте, 0 - в рабочем состоянии): ";
-	cin >> p.underRepair;
-	if (cin.fail() || cin.peek() != '\n' || (p.underRepair != 0 && p.underRepair != 1)) {
-		cerr << "Ошибка: состояние трубы — только 0 или 1" << endl;
-		cin.clear();
-		cin.ignore(100, '\n');
-		return {};
+	while (true) {
+		readValid(p.length, "Введите длину трубы (в километрах): ");
+		if (p.length <= 0) {
+			cerr << "Ошибка: длина должна быть положительной" << endl;
+			continue;
+		}
+		break;
+	}
+	while (true) {
+		readValid(p.diameter, "Введите диаметр трубы (в миллиметрах): ");
+		if (p.diameter <= 0) {
+			cerr << "Ошибка: диаметр должен быть положительным" << endl;
+			continue;
+		}
+		break;
+	}
+	while (true) {
+		readValid(p.underRepair, "Введите состояние трубы (1 - на ремонте, 0 - в рабочем состоянии): ");
+		if (p.underRepair != 0 && p.underRepair != 1) {
+			cerr << "Ошибка: введите 0 или 1" << endl;
+			continue;
+		}
+		break;
 	}
 	return p;
 }
 
 
-CS inputCS() {
-	CS cs;
-	cout << "Введите название станции: ";
-	getline(cin, cs.name);
-	cout << "Введите количество цехов: ";
-	cin >> cs.totalShops;
-	if (cin.fail() || cin.peek() != '\n' || cs.totalShops <= 0) {
-		cerr << "Ошибка: кол-во цехов должно быть целым положительным числом" << endl;
-		cin.clear();
-		cin.ignore(100, '\n');
-		return {};
+CS inputCS(CS& cs) {
+	while (true) {
+		cout << "Введите название станции: ";
+		getline(cin, cs.name);
+		if (cs.name.empty() || cs.name[0] == ' ' || cs.name[0] == '\t' ||
+			cs.name[cs.name.size() - 1] == ' ' || cs.name[cs.name.size() - 1] == '\t') {
+			cerr << "Ошибка: некорректный ввод" << endl;
+			continue;
+		}
+		break;
 	}
-	cout << "Введите количество рабочих цехов: ";
-	cin >> cs.totalWorkingShops;
-	if (cin.fail() || cin.peek() != '\n' || cs.totalWorkingShops <= 0 || cs.totalWorkingShops > cs.totalShops) {
-		cerr << "Ошибка: кол-во рабочих цехов должно быть положительным числом и не может быть больше общего числа цехов" << endl;
-		cin.clear();
-		cin.ignore(100, '\n');
-		return {};
+	while (true) {
+		readValid(cs.totalShops, "Введите количество цехов: ");
+		if (cs.totalShops <= 0) {
+			cerr << "Ошибка: кол-во цехов должно быть положительной" << endl;
+			continue;
+		}
+		break;
 	}
-	cout << "Введите класс станции (a,b,c): ";
-	cin >> cs.classStation;
-	if (cin.fail() || cin.peek() != '\n' || (cs.classStation != 'a' && cs.classStation != 'b' && cs.classStation != 'c')) {
-		cerr << "Ошибка: класс станции — только 'a', 'b' или 'c'" << endl;
-		cin.clear();
-		cin.ignore(100, '\n');
-		return {};
+	while (true) {
+		readValid(cs.totalWorkingShops, "Введите количество рабочих цехов: ");
+		if (cs.totalWorkingShops <= 0 || cs.totalWorkingShops > cs.totalShops) {
+			cerr << "Ошибка: кол-во рабочих цехов должно быть положительным числом и не может быть больше общего числа цехов" << endl;
+			continue;
+		}
+		break;
+	}
+	while (true) {
+		readValid(cs.classStation, "Введите класс станции (a,b,c): ");
+		if (cs.classStation != 'a' && cs.classStation != 'b' && cs.classStation != 'c') {
+			cerr << "Ошибка: класс станции - только a,b,c" << endl;
+			continue;
+		}
+		break;
 	}
 	return cs;
 }
 
-bool isvalidPipe(Pipe p) {
+bool isvalidPipe(Pipe& p) {
 	if (p.diameter == 0) {
 		return false;
 	}
 	return true;
 }
 
-bool isvalidCS(CS cs) {
+bool isvalidCS(CS& cs) {
 	if (cs.totalShops == 0) {
 		return false;
 	}
@@ -96,18 +132,19 @@ bool isvalidCS(CS cs) {
 }
 
 void editPipe(Pipe& p) {
-	char t = {};
+	int t = 0;
 	cout << "Редактирование признака в ремонте:" << endl;
 	cout << "Текущее состояние: " << p.underRepair << endl;
-	cout << "Изменить?(1/0): ";
-	cin >> t;
-	if (cin.fail() || cin.peek() != '\n' || (t != '0' && t != '1')) {
-		cerr << "Ошибка: введите 1 (изменить) или 0 (не изменить)" << endl;
-		cin.clear();
-		cin.ignore(100, '\n');
-	}
-	else {
-		p.underRepair = t == '1' ? !(p.underRepair) : p.underRepair;
+	while (true) {
+		readValid(t, "Изменить?(1-да/0-нет): ");
+		if (t != 0 && t != 1) {
+			cerr << "Ошибка: введите 1 - изменить, 0 - нет" << endl;
+			continue;
+		}
+		else {
+			p.underRepair = t == 1 ? !(p.underRepair) : p.underRepair;
+			break;
+		}
 	}
 }
 
@@ -116,15 +153,16 @@ void editCS(CS& cs) {
 	cout << "Редактирование кол-ва рабочих цехов:" << endl;
 	cout << "Общее кол-во цехов: " << cs.totalShops << endl;
 	cout << "Текущее состояние: " << cs.totalWorkingShops << endl;
-	cout << "Введите новое кол-во рабочих цехов: ";
-	cin >> k;
-	if (cin.fail() || cin.peek() != '\n' || k <= 0 || k > cs.totalShops) {
-		cerr << "Ошибка: кол-во рабочих цехов должно быть положительным числом и не может быть больше общего числа цехов" << endl;
-		cin.clear();
-		cin.ignore(100, '\n');
-	}
-	else {
-		cs.totalWorkingShops = k;
+	while (true) {
+		readValid(k, "Введите новое кол-во рабочих цехов: ");
+		if (k <= 0 || k > cs.totalShops) {
+			cerr << "Ошибка: кол-во рабочих цехов должно быть положительным числом и не может быть больше общего числа цехов" << endl;
+			continue;
+		}
+		else {
+			cs.totalWorkingShops = k;
+			break;
+		}
 	}
 }
 
@@ -145,6 +183,7 @@ void outputCS(CS cs) {
 }
 
 void savedPipe(ofstream& outFile, Pipe p) {
+	outFile << "Pipe:" << endl;
 	outFile << p.name << endl;
 	outFile << p.length << endl;
 	outFile << p.diameter << endl;
@@ -152,6 +191,7 @@ void savedPipe(ofstream& outFile, Pipe p) {
 }
 
 void savedCS(ofstream& outFile, CS cs) {
+	outFile << "CS:" << endl;
 	outFile << cs.name << endl;
 	outFile << cs.totalShops << endl;
 	outFile << cs.totalWorkingShops << endl;
@@ -159,58 +199,56 @@ void savedCS(ofstream& outFile, CS cs) {
 }
 
 void read(ifstream& inFile, Pipe& p, CS& cs) {
-	inFile >> p.name;
-	inFile >> p.length;
-	inFile >> p.diameter;
-	inFile >> p.underRepair;
-	inFile >> cs.name;
-	inFile >> cs.totalShops;
-	inFile >> cs.totalWorkingShops;
-	inFile >> cs.classStation;
+	string header;
+	while (getline(inFile, header)) {
+		if (header == "Pipe:") {
+			getline(inFile, p.name);
+			inFile >> p.length;
+			inFile >> p.diameter;
+			inFile >> p.underRepair;
+			inFile.ignore(100, '\n');
+		}
+		else if (header == "CS:") {
+			getline(inFile, cs.name);
+			inFile >> cs.totalShops;
+			inFile >> cs.totalWorkingShops;
+			inFile >> cs.classStation;
+			inFile.ignore(100, '\n');
+		}
+		else {
+			cerr << "Файл поврежден" << endl;
+			break;
+		}
+	}
 }
-
 
 void command(int action, Pipe& p, CS& cs) {
 	if (action == 1) {
 		cout << "Введите данные для трубы:" << endl;
-		p = inputPipe();
+		inputPipe(p);
 	}
 	else if (action == 2) {
 		cout << "Введите данные для станции:" << endl;
-		cs = inputCS();
+		inputCS(cs);
 	}
 	else if (action == 3) {
-		if (!isvalidPipe(p) && !isvalidCS(cs)) {
-			cout << "Труба еще не создана" << endl;
-			cout << endl;
-			cout << "КС еще не создана" << endl;
-		}
-		else if (isvalidPipe(p) && isvalidCS(cs)) {
+		if (isvalidPipe(p)) {
 			outputPipe(p);
 			cout << endl;
-			outputCS(cs);
 		}
-		else if (isvalidPipe(p)) {
-			outputPipe(p);
-		}
-		else {
+		if (isvalidCS(cs)) {
 			outputCS(cs);
+			cout << endl;
 		}
 	}
 	else if (action == 4) {
 		if (isvalidPipe(p)) {
 			editPipe(p);
 		}
-		else {
-			cout << "Труба еще не создана" << endl;
-		}
 	}
 	else if (action == 5) {
 		if (isvalidCS(cs)) {
 			editCS(cs);
-		}
-		else {
-			cout << "КС еще не создана" << endl;
 		}
 	}
 	else if (action == 6) {
@@ -220,23 +258,11 @@ void command(int action, Pipe& p, CS& cs) {
 			cerr << "Ошибка: не удалось открыть файл" << endl;
 		}
 		else {
-			if (!isvalidPipe(p) && !isvalidCS(cs)) {
-				cout << "Труба еще не создана" << endl;
-				cout << endl;
-				cout << "КС еще не создана" << endl;
-			}
-			else if (isvalidPipe(p) && isvalidCS(cs)) {
-				savedPipe(outFile, p);
-				cout << "Труба добавлена в файл!" << endl;
-				cout << endl;
-				savedCS(outFile, cs);
-				cout << "КС добавлена в файл!" << endl;
-			}
-			else if (isvalidPipe(p)) {
+			if (isvalidPipe(p)) {
 				savedPipe(outFile, p);
 				cout << "Труба добавлена в файл!" << endl;
 			}
-			else {
+			if (isvalidCS(cs)) {
 				savedCS(outFile, cs);
 				cout << "КС добавлена в файл!" << endl;
 			}
@@ -269,25 +295,11 @@ int main() {
 	CS cs = {};
 	while (true) {
 		int action;
-		cout << menu;
-		if (cin.peek() == ' ' || cin.peek() == '\t' || cin.peek() == '\n') {
-			cerr << "Ошибка: нельзя начинать с пробела/таба/переноса строки" << endl;
-			cin.clear();
-			cin.ignore(100, '\n');
-			continue;
-		}
-		cin >> action;
-		if (cin.fail() || cin.peek() != '\n' || action < 0) {
-			cerr << "Ошибка: введите целое положительное число!" << endl;
-			cin.clear();
-			cin.ignore(100, '\n');
-			continue;
-		}
-		else if (action == 0) {
+		readValid(action, menu);
+		if (action == 0) {
 			return 0;
 		}
 		else {
-			cin.ignore(100, '\n');
 			command(action, p, cs);
 		}
 	}
