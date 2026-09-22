@@ -93,15 +93,15 @@ CS inputCS(CS& cs) {
 	while (true) {
 		readValid(cs.totalShops, "Введите количество цехов: ");
 		if (cs.totalShops <= 0) {
-			cerr << "Ошибка: кол-во цехов должно быть положительной" << endl;
+			cerr << "Ошибка: кол-во цехов должно быть положительным числом" << endl;
 			continue;
 		}
 		break;
 	}
 	while (true) {
 		readValid(cs.totalWorkingShops, "Введите количество рабочих цехов: ");
-		if (cs.totalWorkingShops <= 0 || cs.totalWorkingShops > cs.totalShops) {
-			cerr << "Ошибка: кол-во рабочих цехов должно быть положительным числом и не может быть больше общего числа цехов" << endl;
+		if (cs.totalWorkingShops < 0 || cs.totalWorkingShops > cs.totalShops) {
+			cerr << "Ошибка: кол-во рабочих цехов должно быть неотрицательным числом и не может быть больше общего числа цехов" << endl;
 			continue;
 		}
 		break;
@@ -155,8 +155,8 @@ void editCS(CS& cs) {
 	cout << "Текущее состояние: " << cs.totalWorkingShops << endl;
 	while (true) {
 		readValid(k, "Введите новое кол-во рабочих цехов: ");
-		if (k <= 0 || k > cs.totalShops) {
-			cerr << "Ошибка: кол-во рабочих цехов должно быть положительным числом и не может быть больше общего числа цехов" << endl;
+		if (k < 0 || k > cs.totalShops) {
+			cerr << "Ошибка: кол-во рабочих цехов должно быть неотрицательным числом и не может быть больше общего числа цехов" << endl;
 			continue;
 		}
 		else {
@@ -240,34 +240,49 @@ void command(int action, Pipe& p, CS& cs) {
 			outputCS(cs);
 			cout << endl;
 		}
+		if (!isvalidPipe(p) && !isvalidCS(cs)) {
+			cerr << "Предупреждение: Труба и КС не созданы" << endl;
+		}
 	}
 	else if (action == 4) {
 		if (isvalidPipe(p)) {
 			editPipe(p);
+		}
+		else {
+			cerr << "Предупреждение: Труба не создана" << endl;
 		}
 	}
 	else if (action == 5) {
 		if (isvalidCS(cs)) {
 			editCS(cs);
 		}
+		else {
+			cerr << "Предупреждение: КС не создана" << endl;
+		}
+
 	}
 	else if (action == 6) {
 		ofstream outFile;
-		outFile.open("result.txt");
-		if (!outFile.is_open()) {
-			cerr << "Ошибка: не удалось открыть файл" << endl;
+		if (!isvalidPipe(p) && !isvalidCS(cs)) {
+			cerr << "Предупреждение: Труба и КС не созданы" << endl;
 		}
 		else {
-			if (isvalidPipe(p)) {
-				savedPipe(outFile, p);
-				cout << "Труба добавлена в файл!" << endl;
+			outFile.open("result.txt");
+			if (outFile.is_open()) {
+				if (isvalidPipe(p)) {
+					savedPipe(outFile, p);
+					cout << "Труба добавлена в файл!" << endl;
+				}
+				if (isvalidCS(cs)) {
+					savedCS(outFile, cs);
+					cout << "КС добавлена в файл!" << endl;
+				}
 			}
-			if (isvalidCS(cs)) {
-				savedCS(outFile, cs);
-				cout << "КС добавлена в файл!" << endl;
+			else {
+				cerr << "Ошибка: файл поврежден" << endl;
 			}
+			outFile.close();
 		}
-		outFile.close();
 	}
 	else if (action == 7) {
 		ifstream inFile;
