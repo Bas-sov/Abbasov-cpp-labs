@@ -202,3 +202,36 @@ std::vector<int> inputSpecificIDs(const std::unordered_map<int, Item>& items, co
 	}
 	return selected_ids;
 }
+
+template<typename Item>
+void deleteObjectsByFilter(std::unordered_map<int, Item>& items, const std::vector<int>& result) {
+	for (const auto& i : result) {
+		items.erase(i);
+	}
+}
+
+inline void editPipes(std::unordered_map<int, Pipe>& pipes, const std::vector<int>& result) {
+	for (const auto& i : result) {
+		pipes[i].editUnderRepair();
+	}
+}
+
+inline void editStations(std::unordered_map<int, Station>& css, const std::vector<int>& result) {
+	double workshopPercentage = 0;
+	readValidNumber(workshopPercentage, "Введите процент рабочих цехов от общего кол-ва цехов: ", 0.0, 100.0);
+	for (const auto& i : result) {
+		css[i].editTotalWorkingShops(workshopPercentage);
+	}
+}
+
+template<typename Item, typename EditFun>
+void executeByFilter(std::unordered_map<int, Item>& items, const std::vector<int>& result, EditFun editFun) {
+	int value = {};
+	readValidNumber(value, "Действие: 1-удалить, 2-редактировать: ", 1, 2);
+	if (value == 1) {
+		deleteObjectsByFilter(items, result);
+	}
+	else {
+		editFun(items, result);
+	}
+}
