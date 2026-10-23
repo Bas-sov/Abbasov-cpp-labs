@@ -47,9 +47,21 @@ void command(int action, unordered_map <int, Pipe>& pipes, unordered_map <int, S
 		break;
 	}
 	case 6: {
+		if (!pipes.empty()) {
+			searchPipes(pipes);
+		}
+		else {
+			cout << "Предупреждение: Труба не создана" << endl;
+		}
 		break;
 	}
 	case 7: {
+		if (!css.empty()) {
+			searchStations(css);
+		}
+		else {
+			cout << "Предупреждение: КС не создана" << endl;
+		}
 		break;
 	}
 	}

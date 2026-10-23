@@ -235,3 +235,68 @@ void executeByFilter(std::unordered_map<int, Item>& items, const std::vector<int
 		editFun(items, result);
 	}
 }
+
+template <typename Item, typename ExecuteFun>
+void clarifyByFilter(std::unordered_map<int, Item>& items, const std::vector<int>& result, ExecuteFun executeFun) {
+	int value = {};
+	readValidNumber(value, "Уточнить: 1-все найденные, 2-конкретные id: ", 1, 2);
+	if (value == 1) {
+		executeByFilter(items, result, executeFun);
+	}
+	else {
+		std::vector<int> selected_ids = inputSpecificIDs(items, result);
+		executeByFilter(items, selected_ids, executeFun);
+	}
+}
+
+template <typename Item>
+void searchByName(const std::unordered_map<int, Item>& items, std::vector<int>& foundObjects) {
+	std::string name;
+	while (true) {
+		readValidName(name, "Введите название трубы: ");
+		foundObjects = findAndoutputObjectsByFilter(items, checkByName<Item>, name);
+		if (!foundObjects.empty()) {
+			break;
+		}
+		std::cout << "Предупреждение: объектов с таким признаком не существует" << std::endl;
+	}
+}
+
+template <typename T, typename Item, typename Filter >
+void searchByValue(const std::unordered_map<int, Item> items, std::vector<int>& foundObjects, const std::string& prompt, T a, T b, Filter function) {
+	T searchValue;
+	while (true) {
+		readValidNumber(searchValue, prompt, a, b);
+		foundObjects = findAndoutputObjectsByFilter(items, function, searchValue);
+		if (!foundObjects.empty()) {
+			break;
+		}
+		std::cout << "Предупреждение: объектов с таким признаком не существует" << std::endl;
+	}
+}
+
+inline void searchPipes(std::unordered_map<int, Pipe>& pipes) {
+	std::vector<int> foundPipes;
+	int value = {};
+	readValidNumber(value, "Найти по: 1-названию, 2-признаку «в ремонте»: ", 1, 2);
+	if (value == 1) {
+		searchByName(pipes, foundPipes);
+	}
+	else {
+		searchByValue(pipes, foundPipes, "Введите 1-труба на ремонте, 0-труба в рабочем состоянии: ", false, true, checkByRepair);
+	}
+	clarifyByFilter(pipes, foundPipes, editPipes);
+}
+
+inline void searchStations(std::unordered_map<int, Station>& css) {
+	std::vector<int> foundStations;
+	int value = {};
+	readValidNumber(value, "Найти по: 1-названию, 2-по проценту незадействованных цехов: ", 1, 2);
+	if (value == 1) {
+		searchByName(css, foundStations);
+	}
+	else {
+		searchByValue(css, foundStations, "Введите процент незадействованных цехов (<=): ", 0.0, 100.0, checkByWorkshops);
+	}
+	clarifyByFilter(css, foundStations, editStations);
+}
