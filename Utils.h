@@ -149,3 +149,56 @@ std::vector<int> findAndoutputObjectsByFilter(const std::unordered_map<int, Item
 	}
 	return result;
 }
+
+inline bool isFound(int id, const std::vector<int>& found_result) {
+	bool is_found = false;
+	for (int valid_id : found_result) {
+		if (id == valid_id) {
+			is_found = true;
+		}
+	}
+	if (!is_found) {
+		return false;
+	}
+	return true;
+}
+
+inline bool isDuplicate(int id, const std::vector<int>& selected_ids) {
+	bool is_duplicate = false;
+	for (int existing_id : selected_ids) {
+		if (existing_id == id) {
+			is_duplicate = true;
+		}
+	}
+	if (is_duplicate) {
+		return true;
+	}
+	return false;
+}
+
+template <typename Item>
+std::vector<int> inputSpecificIDs(const std::unordered_map<int, Item>& items, const std::vector<int>& found_result) {
+	std::vector<int> selected_ids;
+	int id = 0;
+	while (true) {
+		readValidNumber(id, "Введите ID (0 - чтобы закончить ввод): ", 0);
+		if (id == 0) {
+			if (!selected_ids.empty()) {
+				break;
+			}
+			std::cout << "Вы не выбрали ни одного ID. Действие отменено" << std::endl;
+			continue;
+		}
+		if (!isFound(id, found_result)) {
+			std::cout << "Ошибка: ID " << id << " отсутствует в результатах поиска" << std::endl;
+			continue;
+		}
+		if (isDuplicate(id, selected_ids)) {
+			std::cout << "Этот ID уже выбран\n";
+			continue;
+		}
+		selected_ids.push_back(id);
+		std::cout << "ID " << id << " выбран\n";
+	}
+	return selected_ids;
+}
