@@ -4,6 +4,8 @@
 #include "Pipe.h"
 #include "Station.h"
 #include "Utils.h"
+#include <chrono>
+#include <format>
 
 using namespace std;
 
@@ -68,6 +70,12 @@ void command(int action, unordered_map <int, Pipe>& pipes, unordered_map <int, S
 }
 
 int main() {
+	string time = std::format("{:%d_%m_%Y %H_%M_%OS}", std::chrono::system_clock::now());
+	ofstream logfile("Logs\\log_" + time + ".txt");
+	redirect_output_wrapper cerr_out(cerr);
+	if (logfile) {
+		cerr_out.redirect(logfile);
+	}
 	string menu = "Меню\n1.Добавить трубу\n2.Добавить КС\n3.Просмотр всех объектов\n4.Сохранить\n5.Загрузить\n6.Пакетная обработка труб\n7.Пакетная обработка КС\n0.Выход\n";
 	unordered_map <int, Pipe> pipes = {};
 	unordered_map <int, Station> css = {};
