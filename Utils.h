@@ -67,3 +67,58 @@ void outputOdjects(const std::unordered_map<int, Item>& items, const std::string
 		}
 	}
 }
+
+template <typename Item>
+void writeContainer(std::ofstream& outFile, const std::unordered_map<int, Item>& items) {
+	outFile << items.size() << '\n';
+	for (const auto& item : items) {
+		outFile << item.second;
+	}
+}
+
+template <typename Container1, typename Container2>
+void savedDataToFile(const std::string& file_name, const Container1& pipes, const Container2& css) {
+	std::ofstream outFile(file_name);
+	if (!outFile.is_open()) {
+		std::cout << "Ошибка: не удалось открыть файл" << std::endl;
+		return;
+	}
+	writeContainer(outFile, pipes);
+	writeContainer(outFile, css);
+	std::cout << "Объект(ы) добавлен(ы) в файл" << std::endl;
+	outFile.close();
+}
+
+template <typename Item>
+void loadContainer(std::ifstream& inFile, std::unordered_map<int, Item>& items) {
+	int count = 0;
+	inFile >> count;
+	if (count == 0) {
+		return;
+	}
+	items.clear();
+	Item item;
+	for (int i = 0; i < count; i++) {
+		inFile >> item;
+		items.emplace(item.getID(), item);
+	}
+}
+
+template <typename Container1, typename Container2>
+void loadDataFromFile(const std::string& file_name, Container1& pipes, Container2& css) {
+	std::ifstream inFile(file_name);
+	if (!inFile.is_open()) {
+		std::cout << "Ошибка: не удалось открыть файл" << std::endl;
+		return;
+	}
+	else if (inFile.peek() == EOF) {
+		std::cout << "Предупреждение: файл пуст" << std::endl;
+		return;
+	}
+	else {
+		loadContainer(inFile, pipes);
+		loadContainer(inFile, css);
+		std::cout << "Данные успешно считаны!" << std::endl;
+	}
+	inFile.close();
+}

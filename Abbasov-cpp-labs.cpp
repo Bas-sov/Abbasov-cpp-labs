@@ -28,9 +28,22 @@ void command(int action, unordered_map <int, Pipe>& pipes, unordered_map <int, S
 		break;
 	}
 	case 4: {
+		if (pipes.empty() && css.empty()) {
+			cout << "Предупреждение: Труба и КС не созданы" << endl;
+		}
+		else {
+			string file_name;
+			cout << "Укажите название файла: ";
+			getline(cin, file_name);
+			savedDataToFile(file_name, pipes, css);
+		}
 		break;
 	}
 	case 5: {
+		string file_name;
+		cout << "Укажите название файла: ";
+		getline(cin, file_name);
+		loadDataFromFile(file_name, pipes, css);
 		break;
 	}
 	case 6: {
