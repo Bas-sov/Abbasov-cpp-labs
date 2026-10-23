@@ -16,6 +16,16 @@ int Station::getID() const
 	return id;
 }
 
+std::string Station::getName() const
+{
+	return name;
+}
+
+double Station::getUnusedWorkshops() const
+{
+	return 100 * (totalShops - totalWorkingShops) / totalShops;
+}
+
 std::istream& operator>>(istream& in, Station& cs)
 {
 	readValidName(cs.name, "Введите название станции: ");
@@ -34,6 +44,11 @@ std::ifstream& operator>>(ifstream& inF, Station& cs) {
 	inF >> cs.classStation;
 	Station::NextId = cs.id + 1;
 	return inF;
+}
+
+void Station::editTotalWorkingShops(double workshopPercentage)
+{
+	totalWorkingShops = floor(totalShops * workshopPercentage / 100);
 }
 
 std::ostream& operator<<(ostream& out, const Station& cs)

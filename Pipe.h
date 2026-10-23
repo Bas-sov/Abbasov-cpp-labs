@@ -14,6 +14,9 @@ private:
 public:
 	Pipe();
 	int getID() const;
+	std::string getName() const;
+	bool getUnderRepair() const;
+	void editUnderRepair();
 	friend std::istream& operator >> (std::istream& in, Pipe& p);
 	friend std::ifstream& operator >> (std::ifstream& inF, Pipe& p);
 	friend std::ofstream& operator << (std::ofstream& outF, const Pipe& p);

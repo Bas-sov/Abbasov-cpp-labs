@@ -122,3 +122,30 @@ void loadDataFromFile(const std::string& file_name, Container1& pipes, Container
 	}
 	inFile.close();
 }
+
+template <typename Item>
+bool checkByName(const Item& item, const std::string& name) {
+	return item.getName().find(name) != std::string::npos;
+}
+
+inline bool checkByRepair(const Pipe& p, bool underRepair) {
+	return p.getUnderRepair() == underRepair;
+}
+
+inline bool checkByWorkshops(const Station& cs, double unusedWorkshops) {
+	return cs.getUnusedWorkshops() <= unusedWorkshops;
+}
+
+template<typename Item, typename Filter, typename T>
+std::vector<int> findAndoutputObjectsByFilter(const std::unordered_map<int, Item>& items, Filter filter, const T& parametr) {
+	std::vector <int> result;
+	for (const auto& item : items) {
+		if (filter(item.second, parametr)) {
+			result.push_back(item.first);
+		}
+	}
+	for (int id : result) {
+		std::cout << items.at(id) << std::endl;
+	}
+	return result;
+}

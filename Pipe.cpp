@@ -16,6 +16,16 @@ int Pipe::getID() const
 	return id;
 }
 
+std::string Pipe::getName() const
+{
+	return name;
+}
+
+bool Pipe::getUnderRepair() const
+{
+	return underRepair;
+}
+
 std::istream& operator>>(istream& in, Pipe& p)
 {
 	readValidName(p.name, "Введите название трубы: ");
@@ -34,6 +44,11 @@ std::ifstream& operator>>(ifstream& inF, Pipe& p) {
 	inF >> p.underRepair;
 	Pipe::NextId = p.id + 1;
 	return inF;
+}
+
+void Pipe::editUnderRepair()
+{
+	underRepair = !(underRepair);
 }
 
 std::ostream& operator << (ostream& out, const Pipe& p) {
