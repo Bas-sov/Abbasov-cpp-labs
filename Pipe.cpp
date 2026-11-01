@@ -1,19 +1,18 @@
 #include "Pipe.h"
 #include <iostream>
+#include <fstream>
 #include "Utils.h"
 
 using namespace std;
 
-int Pipe::NextId = 1;
-
-Pipe::Pipe()
-{
-	id = NextId++;
-}
-
 int Pipe::getID() const
 {
 	return id;
+}
+
+void Pipe::setID(int newId)
+{
+	id = newId;
 }
 
 std::string Pipe::getName() const
@@ -42,7 +41,6 @@ std::ifstream& operator>>(ifstream& inF, Pipe& p) {
 	inF >> p.length;
 	inF >> p.diameter;
 	inF >> p.underRepair;
-	Pipe::NextId = p.id + 1;
 	return inF;
 }
 

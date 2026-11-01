@@ -4,15 +4,14 @@
 class Station
 {
 private:
-	static int NextId;
 	int id = {};
 	std::string name;
 	int totalShops = {}; // количество цехов
 	int totalWorkingShops = {}; // количество рабочих цехов
 	char classStation = {}; // класс станции (a,b,c)
 public:
-	Station();
 	int getID() const;
+	void setID(int newId);
 	std::string getName() const;
 	double getUnusedWorkshops() const;
 	void editTotalWorkingShops(double workshopPercentage);
