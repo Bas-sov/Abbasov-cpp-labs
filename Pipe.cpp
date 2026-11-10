@@ -20,9 +20,27 @@ std::string Pipe::getName() const
 	return name;
 }
 
+int Pipe::getDiameter() const
+{
+	return diameter;
+}
+
+void Pipe::inputForConnection(int d)
+{
+	readValidName(name, "Введите название трубы: ");
+	readValidNumber(length, "Введите длину трубы (в километрах): ", 1.0);
+	diameter = d;
+	underRepair = false;
+}
+
 bool Pipe::getUnderRepair() const
 {
 	return underRepair;
+}
+
+void Pipe::editUnderRepair()
+{
+	underRepair = !(underRepair);
 }
 
 std::istream& operator>>(istream& in, Pipe& p)
@@ -42,11 +60,6 @@ std::ifstream& operator>>(ifstream& inF, Pipe& p) {
 	inF >> p.diameter;
 	inF >> p.underRepair;
 	return inF;
-}
-
-void Pipe::editUnderRepair()
-{
-	underRepair = !(underRepair);
 }
 
 std::ostream& operator << (ostream& out, const Pipe& p) {

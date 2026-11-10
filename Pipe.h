@@ -13,6 +13,8 @@ public:
 	int getID() const;
 	void setID(int newId);
 	std::string getName() const;
+	int getDiameter() const;
+	void inputForConnection(int d);
 	bool getUnderRepair() const;
 	void editUnderRepair();
 	friend std::istream& operator >> (std::istream& in, Pipe& p);

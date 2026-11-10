@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include <unordered_map>
 #include "Pipe.h"
 #include "Station.h"
@@ -22,6 +23,10 @@ private:
 	bool isStationConnected(int id) const;
 	void deletePipes(const std::vector<int>& result);
 	void deleteStations(const std::vector<int>& result);
+	int findFreePipeByDiameter(int diameter) const;
+	int inputStationId(const std::string& prompt, int excludeID = 0) const;
+	int findOrCreatePipe(int diameter);
+	int countWorkStations() const;
 public:
 	void addPipe();
 	void addStation();

@@ -25,6 +25,16 @@ double Station::getUnusedWorkshops() const
 	return 100 * (totalShops - totalWorkingShops) / totalShops;
 }
 
+void Station::editTotalWorkingShops(double workshopPercentage)
+{
+	totalWorkingShops = static_cast<int>(totalShops * workshopPercentage / 100);
+}
+
+bool Station::hasWorkingShops() const
+{
+	return totalWorkingShops > 0;
+}
+
 std::istream& operator>>(istream& in, Station& cs)
 {
 	readValidName(cs.name, "Введите название станции: ");
@@ -42,11 +52,6 @@ std::ifstream& operator>>(ifstream& inF, Station& cs) {
 	inF >> cs.totalWorkingShops;
 	inF >> cs.classStation;
 	return inF;
-}
-
-void Station::editTotalWorkingShops(double workshopPercentage)
-{
-	totalWorkingShops = static_cast<int>(totalShops * workshopPercentage / 100);
 }
 
 std::ostream& operator<<(ostream& out, const Station& cs)

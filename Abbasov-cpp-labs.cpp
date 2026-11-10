@@ -28,8 +28,8 @@ int main() {
 		case 5: { gts.loadFromFile(); break; }
 		case 6: { gts.searchPipes(); break; }
 		case 7: { gts.searchStations(); break; }
-		case 8: { break; }
-		case 9: { break; }
+		case 8: { gts.connect(); break; }
+		case 9: { gts.disconnect(); break; }
 		case 10: { break; }
 		}
 	}
