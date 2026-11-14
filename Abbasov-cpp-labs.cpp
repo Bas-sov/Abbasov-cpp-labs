@@ -30,7 +30,7 @@ int main() {
 		case 7: { gts.searchStations(); break; }
 		case 8: { gts.connect(); break; }
 		case 9: { gts.disconnect(); break; }
-		case 10: { break; }
+		case 10: { gts.sort(); break; }
 		}
 	}
 	return 0;

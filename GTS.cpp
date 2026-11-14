@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 #include "GTS.h"
 #include "Utils.h"
 
@@ -293,4 +294,49 @@ void GTS::disconnect()
 
 void GTS::sort()
 {
+	if (connections.empty()) {
+		cout << "Предупреждение: в газотранспортной сети отсутствуют объекты" << endl;
+		return;
+	}
+
+	unordered_map<int, int> degree = {}; // id CS -> кол-во полустепеней захода
+	unordered_map<int, vector<pair<int, int>>> adjacent = {}; // id CS -> список полустепеней исхода {pipeID, outCSID}
+
+	for (const auto& [key, item] : connections) {
+		adjacent[item.first].push_back({ key, item.second });
+		degree[item.first] += 0;
+		degree[item.second] += 1;
+	}
+
+	queue<int> ready = {};
+	for (const auto& [key, item] : degree) {
+		if (item == 0) {
+			ready.push(key);
+		}
+		else {
+			continue;
+		}
+	}
+
+	vector<int> pipeOrder = {};
+	while (!ready.empty()) {
+		int current = ready.front();
+		ready.pop();
+
+		for (const auto& [pipeID, i] : adjacent[current]) {
+			pipeOrder.push_back(pipeID);
+			--degree[i];
+			if (degree[i] == 0) {
+				ready.push(i);
+			}
+		}
+	}
+
+	if (pipeOrder.size() < connections.size()) {
+		cout << "В газотранспортной сети присутствует цикл, поэтому сортировка невозможна" << endl;
+		return;
+	}
+	for (int pipeID : pipeOrder) {
+		cout << pipeID << ":" << connections.at(pipeID).first << "->" << connections.at(pipeID).second << endl;
+	}
 }
