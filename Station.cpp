@@ -30,11 +30,6 @@ void Station::editTotalWorkingShops(double workshopPercentage)
 	totalWorkingShops = static_cast<int>(totalShops * workshopPercentage / 100);
 }
 
-bool Station::hasWorkingShops() const
-{
-	return totalWorkingShops > 0;
-}
-
 std::istream& operator>>(istream& in, Station& cs)
 {
 	readValidName(cs.name, "Введите название станции: ");

@@ -15,7 +15,6 @@ public:
 	std::string getName() const;
 	double getUnusedWorkshops() const;
 	void editTotalWorkingShops(double workshopPercentage);
-	bool hasWorkingShops() const;
 	friend std::istream& operator >> (std::istream& in, Station& cs);
 	friend std::ifstream& operator >> (std::ifstream& inF, Station& cs);
 	friend std::ofstream& operator << (std::ofstream& outF, const Station& cs);

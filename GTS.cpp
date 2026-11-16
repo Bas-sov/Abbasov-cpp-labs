@@ -155,9 +155,6 @@ int GTS::inputStationId(const std::string& prompt, int excludeID) const
 		if (css.count(csID) == 0) {
 			cout << "Станции с таким ID не существует" << endl;
 		}
-		else if (!css.at(csID).hasWorkingShops()) {
-			cout << "У станции нет рабочих цехов, соединение невозможно" << endl;
-		}
 		else if (csID == excludeID) {
 			cout << "Нельзя соединить станцию саму с собой" << endl;
 		}
@@ -180,20 +177,6 @@ int GTS::findOrCreatePipe(int diameter)
 		pipeID = maxPipeID - 1;
 	}
 	return pipeID;
-}
-
-int GTS::countWorkStations() const
-{
-	int workingStations = 0;
-	for (const auto& [key, item] : css) {
-		if (item.hasWorkingShops()) {
-			++workingStations;
-		}
-		else {
-			continue;
-		}
-	}
-	return workingStations;
 }
 
 void GTS::searchPipes()
@@ -259,7 +242,7 @@ void GTS::searchStations()
 
 void GTS::connect()
 {
-	if (countWorkStations() < 2) {
+	if (css.size() < 2) {
 		cout << "Предупреждение: нельзя соединить объекты в газотранспортную сеть" << endl;
 		return;
 	}
@@ -300,10 +283,10 @@ void GTS::sort()
 	}
 
 	unordered_map<int, int> degree = {}; // id CS -> кол-во полустепеней захода
-	unordered_map<int, vector<pair<int, int>>> adjacent = {}; // id CS -> список полустепеней исхода {pipeID, outCSID}
+	unordered_map<int, vector<int>> adjacent = {}; // id CS -> список полустепеней исхода {pipeID, outCSID}
 
 	for (const auto& [key, item] : connections) {
-		adjacent[item.first].push_back({ key, item.second });
+		adjacent[item.first].push_back(item.second);
 		degree[item.first] += 0;
 		degree[item.second] += 1;
 	}
@@ -318,13 +301,13 @@ void GTS::sort()
 		}
 	}
 
-	vector<int> pipeOrder = {};
+	vector<int> order = {};
 	while (!ready.empty()) {
 		int current = ready.front();
 		ready.pop();
+		order.push_back(current);
 
-		for (const auto& [pipeID, i] : adjacent[current]) {
-			pipeOrder.push_back(pipeID);
+		for (const auto& i : adjacent[current]) {
 			--degree[i];
 			if (degree[i] == 0) {
 				ready.push(i);
@@ -332,11 +315,12 @@ void GTS::sort()
 		}
 	}
 
-	if (pipeOrder.size() < connections.size()) {
+	if (order.size() < adjacent.size()) {
 		cout << "В газотранспортной сети присутствует цикл, поэтому сортировка невозможна" << endl;
 		return;
 	}
-	for (int pipeID : pipeOrder) {
-		cout << pipeID << ":" << connections.at(pipeID).first << "->" << connections.at(pipeID).second << endl;
+	for (int i : order) {
+		cout << i << " ";
 	}
+	cout << endl;
 }

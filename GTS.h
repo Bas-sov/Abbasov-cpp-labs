@@ -100,6 +100,7 @@ void savedDataToFile(const std::string& file_name
 	writeContainer(outFile, pipes);
 	writeContainer(outFile, css);
 	writeConnections(outFile, connection);
+	std::cerr << file_name << std::endl;
 	std::cout << "Объект(ы) добавлен(ы) в файл" << std::endl;
 	outFile.close();
 }
@@ -151,6 +152,7 @@ void loadDataFromFile(const std::string& file_name, Container1& pipes, Container
 		loadContainer(inFile, pipes, maxPipeID);
 		loadContainer(inFile, css, maxStationID);
 		loadConnections(inFile, connections);
+		std::cerr << file_name << std::endl;
 		std::cout << "Данные успешно считаны!" << std::endl;
 	}
 	inFile.close();
