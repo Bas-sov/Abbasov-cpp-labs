@@ -12,11 +12,11 @@ int main() {
 	if (logfile) {
 		cerr_out.redirect(logfile);
 	}
-	string menu = "Меню\n1.Добавить трубу\n2.Добавить КС\n3.Просмотр всех объектов\n4.Сохранить\n5.Загрузить\n6.Пакетная обработка труб\n7.Пакетная обработка КС\n8.Соединить\n9.Отсоединить\n10.Отсортировать\n0.Выход\n";
+	string menu = "Меню\n1.Добавить трубу\n2.Добавить КС\n3.Просмотр всех объектов\n4.Сохранить\n5.Загрузить\n6.Пакетная обработка труб\n7.Пакетная обработка КС\n8.Соединить\n9.Отсоединить\n10.Отсортировать\n11.Производительность потока в сети\n0.Выход\n";
 	GTS gts;
 	while (true) {
 		int action;
-		readValidNumber(action, menu, 0, 10);
+		readValidNumber(action, menu, 0, 11);
 		if (action == 0) {
 			return 0;
 		}
@@ -31,6 +31,7 @@ int main() {
 		case 8: { gts.connect(); break; }
 		case 9: { gts.disconnect(); break; }
 		case 10: { gts.sort(); break; }
+		case 11: { gts.max_performance(); break; }
 		}
 	}
 	return 0;

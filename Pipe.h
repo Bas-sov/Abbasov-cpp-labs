@@ -13,6 +13,7 @@ public:
 	int getID() const;
 	void setID(int newId);
 	std::string getName() const;
+	int getLength() const;
 	int getDiameter() const;
 	void inputForConnection(int d);
 	bool getUnderRepair() const;

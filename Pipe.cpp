@@ -20,6 +20,11 @@ std::string Pipe::getName() const
 	return name;
 }
 
+int Pipe::getLength() const
+{
+	return length;
+}
+
 int Pipe::getDiameter() const
 {
 	return diameter;

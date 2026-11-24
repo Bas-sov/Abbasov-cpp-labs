@@ -1,6 +1,9 @@
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <queue>
+#include <algorithm>
+#include <cmath>
 #include "GTS.h"
 #include "Utils.h"
 
@@ -283,7 +286,7 @@ void GTS::sort()
 	}
 
 	unordered_map<int, int> degree = {}; // id CS -> кол-во полустепеней захода
-	unordered_map<int, vector<int>> adjacent = {}; // id CS -> список полустепеней исхода {pipeID, outCSID}
+	unordered_map<int, vector<int>> adjacent = {}; // id CS -> список полустепеней исхода outCSID
 
 	for (const auto& [key, item] : connections) {
 		adjacent[item.first].push_back(item.second);
@@ -323,4 +326,27 @@ void GTS::sort()
 		cout << i << " ";
 	}
 	cout << endl;
+}
+
+void GTS::max_performance()
+{
+	if (connections.empty()) {
+		cout << "Предупреждение: в газотранспортной сети отсутствуют объекты" << endl;
+		return;
+	}
+	double max_performance = 0;
+	for (const auto& [key, item] : connections) {
+		if (!pipes[key].getUnderRepair()) {
+			max_performance = std::max(
+				max_performance,
+				0.0384 * std::sqrt(
+					pow(pipes[key].getDiameter() * 0.001, 5) / (pipes[key].getLength() * 1000)
+				)
+			);
+		}
+		else {
+			continue;
+		}
+	}
+	cout << std::setprecision(5) << max_performance * 60 * 60 * 24 << " м³/сут" << endl;
 }

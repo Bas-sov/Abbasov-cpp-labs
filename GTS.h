@@ -38,6 +38,7 @@ public:
 	void connect();
 	void disconnect();
 	void sort();
+	void max_performance();
 };
 
 template<typename Item>
