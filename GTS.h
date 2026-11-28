@@ -39,6 +39,7 @@ public:
 	void disconnect();
 	void sort();
 	void max_performance();
+	void shortest_path();
 };
 
 template<typename Item>

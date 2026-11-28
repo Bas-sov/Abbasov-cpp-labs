@@ -1,9 +1,10 @@
 #include <iostream>
-#include <iomanip>
+#include <format>
 #include <vector>
 #include <queue>
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include "GTS.h"
 #include "Utils.h"
 
@@ -348,5 +349,74 @@ void GTS::max_performance()
 			continue;
 		}
 	}
-	cout << std::setprecision(5) << max_performance * 60 * 60 * 24 << " м³/сут" << endl;
+	cout << format("{:.5f}", max_performance * 60 * 60 * 24) << " м³/сут" << endl;
+}
+
+void GTS::shortest_path()
+{
+	if (connections.empty()) {
+		cout << "Предупреждение: в газотранспортной сети отсутствуют объекты" << endl;
+		return;
+	}
+	int startID = inputStationId("Введите ID начальной станции: ");
+	int endID = inputStationId("Введите ID конечной станции: ", startID);
+
+	unordered_map<int, vector<pair<int, int>>> adjacent = {}; // id КС -> {id соседней КС, id трубы}
+	for (const auto& [pipeID, item] : connections) {
+		if (!pipes[pipeID].getUnderRepair()) {
+			adjacent[item.first].push_back({ item.second, pipeID });
+		}
+	}
+
+	constexpr double INF = numeric_limits<double>::infinity();
+	unordered_map<int, double> dist = {};              // id КС -> текущее кратчайшее расстояние от start до него
+	unordered_map<int, pair<int, int>> previous = {};  // id КС -> {предыдущая КС, труба}
+	for (const auto& [csID, station] : css) {
+		dist[csID] = INF;
+	}
+	dist[startID] = 0;
+
+	priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> ready;
+	ready.push({ 0, startID });
+
+	while (!ready.empty()) {
+		auto [currentDist, current] = ready.top();
+		ready.pop();
+		if (currentDist > dist[current]) {
+			continue;
+		}
+		if (current == endID) {
+			break;
+		}
+		for (const auto& [next, pipeID] : adjacent[current]) {
+			double weight = pipes[pipeID].getLength();
+			double newDist = dist[current] + weight;
+			if (newDist < dist[next]) {
+				dist[next] = newDist;
+				previous[next] = { current, pipeID };
+				ready.push({ newDist, next });
+			}
+		}
+	}
+
+	if (dist[endID] == INF) {
+		cout << "Путь от КС " << startID << " до КС " << endID << " не существует" << endl;
+		return;
+	}
+
+	// Восстановление пути: идём от конечной КС назад по previous
+	vector<int> path = { endID };
+	vector<int> pathPipes = {};
+	for (int cs = endID; cs != startID; cs = previous[cs].first) {
+		path.push_back(previous[cs].first);
+		pathPipes.push_back(previous[cs].second);
+	}
+	reverse(path.begin(), path.end());
+	reverse(pathPipes.begin(), pathPipes.end());
+
+	cout << "Кратчайший путь: " << path[0];
+	for (size_t i = 0; i < pathPipes.size(); i++) {
+		cout << " (" << pathPipes[i] << ") " << path[i + 1];
+	}
+	cout << endl << "Длина пути: " << format("{:.2f}", dist[endID]) << " км" << endl;
 }

@@ -20,7 +20,7 @@ std::string Pipe::getName() const
 	return name;
 }
 
-int Pipe::getLength() const
+double Pipe::getLength() const
 {
 	return length;
 }
